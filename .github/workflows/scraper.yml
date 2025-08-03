@@ -1,0 +1,37 @@
+name: Scrape Website
+
+on:
+  schedule:
+    - cron: '0-59/10 0 * * *'   # JST 09:00台
+    - cron: '0-59/10 1 * * *'   # JST 10:00台
+    - cron: '0-59/10 2 * * *'
+    - cron: '0-59/10 3 * * *'
+    - cron: '0-59/10 4 * * *'
+    - cron: '0-59/10 5 * * *'
+    - cron: '0-59/10 6 * * *'
+    - cron: '0-59/10 7 * * *'
+    - cron: '0-59/10 8 * * *'
+    - cron: '0-59/10 9 * * *'
+    - cron: '0-59/10 10 * * *'
+    - cron: '0-59/10 11 * * *'  # JST 20:00台
+  workflow_dispatch:
+jobs:
+  run-scraper:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.10
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4
+      - name: Run scraper
+        run: python scraper.py
+      - name: Commit changes
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+          git add data.csv
+          git commit -m "Update data"
+          git push
